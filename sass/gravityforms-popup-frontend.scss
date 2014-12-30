@@ -1,0 +1,62 @@
+// Form Popup
+#gravityforms-popup{
+	background: white;
+	position: fixed;
+	top: 15px;
+	right: 15px;
+	bottom: 15px;
+	left: 15px;
+	z-index: 10000;
+	padding: 5px 15px 15px;
+	box-shadow: 0 0 10px #111;
+	overflow-y: auto;
+	display: none;
+}
+
+// Modal
+#gravityforms-popup-modal{
+	background: rgba(0,0,0,.6);
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	content: '';
+	z-index: 9995;
+	display: none;
+}
+
+// Close Button
+#gravityforms-popup-close{
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	content: '';
+	background: url( ../images/close.png ) no-repeat;
+	width: 14px;
+	height: 14px;
+	text-indent: -999em;
+	cursor: pointer;
+
+	&:hover{
+		opacity: .8;
+	}
+
+	&:active{
+		opacity: .6;
+	}
+}
+
+// Tablet Landscape and above
+@media screen and ( min-width: 500px ){
+	#gravityforms-popup{
+		width: 400px;
+		top: 10%;
+		right: auto;
+		bottom: 10%;
+		left: 50%;
+		margin-left: -200px;		
+	}
+}
