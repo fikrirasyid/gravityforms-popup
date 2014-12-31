@@ -18,7 +18,7 @@ if( class_exists( 'GFForms' ) ){
 	 */
 	class GFPopup extends GFAddon{
         protected $_version 					= "0.1";
-        protected $_min_gravityforms_version 	= "1.8.8.2";
+        protected $_min_gravityforms_version 	= "1.8.20";
         protected $_slug 						= "gravityforms-popup";
         protected $_path 						= __FILE__;
         protected $_full_path 					= __FILE__;
@@ -47,7 +47,7 @@ if( class_exists( 'GFForms' ) ){
             parent::init_admin();
 
             // Only do this on Gravityforms Popup page
-            if( isset( $_GET['page'] ) && isset( $_GET['subview'] ) && 'gf_settings' == $_GET['page'] && 'Popup' == $_GET['subview'] ){
+            if( isset( $_GET['page'] ) && isset( $_GET['subview'] ) && 'gf_settings' == $_GET['page'] && 'gravityforms-popup' == $_GET['subview'] ){
 
                 wp_enqueue_media();
                 wp_enqueue_script( 'gravityforms-popup-dashboard', $this->get_base_url() . "/js/gravityforms-popup-dashboard.js", array( 'jquery' ), $this->_version, true );
@@ -361,7 +361,7 @@ if( class_exists( 'GFForms' ) ){
          * @return void
          */
         public function set_cookie_value(){
-        	$settings_link 	= admin_url( "admin.php?page=gf_settings&subview=Popup" );
+        	$settings_link 	= admin_url( "admin.php?page=gf_settings&subview=gravityforms-popup" );
 
         	$timestamp = current_time( 'timestamp' );
 
