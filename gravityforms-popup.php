@@ -130,6 +130,12 @@ if( class_exists( 'GFForms' ) ){
 			        		'default_values' => $this->get_setting( 'gform', 0 ),
 			        		'choices'		 => $this->choices_gforms()
 		        		),
+                        array(
+                            'label'          => __( 'Seconds To Appearance:', 'gravityforms-popup'),
+                            'type'           => 'number',
+                            'name'           => 'seconds_to_appearance',
+                            'default_value'  => 10
+                        ),
 			        	array(
 			        		'label' 		 => __( 'Show Popup on:', 'gravityforms-popup'),
 			        		'type'			 => 'checkbox',
@@ -155,12 +161,12 @@ if( class_exists( 'GFForms' ) ){
 		        			)
 		        		),
                         array(
-                            'label'         => __( 'Initial Image', 'gravityforms-popup' ),
+                            'label'         => __( 'Initial Image:', 'gravityforms-popup' ),
                             'type'          => 'select_image',
                             'name'          => 'initial_image'
                         ),
 		        		array(
-		        			'label'			=> __( 'Update Cookie', 'gravityforms-popup' ),
+		        			'label'			=> __( 'Update Cookie:', 'gravityforms-popup' ),
 		        			'type'			=> 'update_gravityforms_popup_cookie_type',
                             'name'          => 'update_cookie'
 	        			)
@@ -169,6 +175,50 @@ if( class_exists( 'GFForms' ) ){
 			);
 
 			return $setting_fields;        	
+        }
+
+        /**
+         * Input numbers
+         */
+        protected function settings_number($field, $echo = true) {
+
+            $field["type"] = "number"; //making sure type is set to text
+            $attributes = $this->get_field_attributes($field);
+            $default_value = rgar( $field, 'value' ) ? rgar( $field, 'value' ) : rgar( $field, 'default_value' );
+            $value = $this->get_setting($field["name"], $default_value);
+
+
+            $name = esc_attr($field["name"]);
+            $tooltip =  isset( $choice['tooltip'] ) ? gform_tooltip( $choice['tooltip'], rgar( $choice, 'tooltip_class'), true ) : "";
+            $html = "";
+
+            $html .= '<input
+                        type="number"
+                        name="_gaddon_setting_' . esc_attr($field["name"]) . '"
+                        value="' . esc_attr($value) . '"' .
+                        implode( ' ', $attributes ) .
+                    ' />';
+
+            $feedback_callback = rgar($field, 'feedback_callback');
+            if(is_callable($feedback_callback)){
+                $is_valid = call_user_func_array( $feedback_callback, array( $value, $field ) );
+                $icon = "";
+                if($is_valid === true)
+                    $icon = "icon-check fa-check gf_valid"; // check icon
+                else if($is_valid === false)
+                    $icon = "icon-remove fa-times gf_invalid"; // x icon
+
+                if(!empty($icon))
+                    $html .= "&nbsp;&nbsp;<i class=\"fa {$icon}\"></i>";
+            }
+
+            if( $this->field_failed_validation( $field ) )
+                $html .= $this->get_error_icon( $field );
+
+            if ($echo)
+                echo $html;
+
+            return $html;
         }
 
         /**
@@ -344,9 +394,15 @@ if( class_exists( 'GFForms' ) ){
         		wp_enqueue_script( 'gravityforms-popup-frontend', $this->get_base_url() . "/js/gravityforms-popup-frontend.js", array( 'jquery' ), $this->_version, true );
         		wp_enqueue_style( 'gravityforms-popup-frontend', $this->get_base_url() . "/css/gravityforms-popup-frontend.css", array(), $this->_version );
 
+                // Define value for appearance
+                $seconds_to_appearance = $this->get_plugin_setting( 'seconds_to_appearance' );
+                if( ! $seconds_to_appearance ){
+                    $seconds_to_appearance = 10;
+                }
+
         		// Adding parameters
         		$params = array(
-        			'second_until_appearance' 	=> 10,
+        			'seconds_to_appearance' 	=> $seconds_to_appearance,
         			'endpoint'					=> admin_url( '/admin-ajax.php?action=gravityforms_popup_endpoint' ),
         			'displayed_nonce'			=> wp_create_nonce( 'gravityforms_popup_displayed' ),
         			'cookie_name'				=> 'gravityforms_popup_cookie',

@@ -32,7 +32,7 @@ jQuery(document).ready(function($){
 
 	// Automatically display after time limit
 	function display_gravityforms_popup_after_seconds(){
-		var seconds = gravityforms_popup_params.second_until_appearance * 1000;
+		var seconds = gravityforms_popup_params.seconds_to_appearance * 1000;
 
 		setTimeout(
 			function(){
