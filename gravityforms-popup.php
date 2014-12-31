@@ -150,6 +150,10 @@ if( class_exists( 'GFForms' ) ){
 			        				'label'	 => __( 'Single Posts, Pages, and other Post Types', 'gravityforms-popup' ),
 			        				'name'	 => 'appearance_is_singular'
 		        				),
+                                array(
+                                    'label'  => __( 'Category, Tags, and Custom Taxonomy Page', 'gravityforms-popup' ),
+                                    'name'   => 'appearance_is_archive'
+                                ),
 			        			array(
 			        				'label'	 => __( 'Search Results', 'gravityforms-popup' ),
 			        				'name'	 => 'appearance_is_search'
@@ -323,7 +327,7 @@ if( class_exists( 'GFForms' ) ){
 	        $settings = $this->get_plugin_settings();
 
 	        // Conditional Lists
-	        $conditionals = array( 'is_front_page', 'is_singular', 'is_search', 'is_404' );
+	        $conditionals = array( 'is_front_page', 'is_singular', 'is_archive', 'is_search', 'is_404' );
 
 	        // Display content based on conditionals
 	        if( ! empty( $settings ) ){
