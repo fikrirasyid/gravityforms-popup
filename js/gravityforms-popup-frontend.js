@@ -43,6 +43,16 @@ jQuery(document).ready(function($){
 	}
 	display_gravityforms_popup_after_seconds();
 
+	// Initial image UX
+	$('#gravityforms-popup .initial-image').click(function(e){
+		e.preventDefault();
+
+		$(this).fadeOut( 'fast', function(){
+
+			$('#gravityforms-popup').removeClass( 'has-initial-image' );
+
+		});
+	});
 
 	// Close Popup
 	$('#gravityforms-popup-close, #gravityforms-popup-modal').click(function(e){

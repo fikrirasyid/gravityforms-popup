@@ -263,7 +263,7 @@ if( class_exists( 'GFForms' ) ){
         	// Cookie based checking first
         	if( isset( $_COOKIE['gravityforms_popup_cookie']) && $_COOKIE['gravityforms_popup_cookie'] == $this->get_cookie_value() ){
         		// User has viewed this popup before
-        		return;
+        		return false;
         	}
 
 
@@ -375,7 +375,19 @@ if( class_exists( 'GFForms' ) ){
 				// Get form
 				if( isset( $form_id ) && $form_id && $form_id != '0' ){
 
-					echo '<div id="gravityforms-popup" class="gravityforms-popup-block undisplayed">';
+                    $initial_image = $this->get_plugin_setting( 'image_src_initial_image', false );
+
+                    if( $initial_image ){
+
+                        echo '<div id="gravityforms-popup" class="gravityforms-popup-block undisplayed has-initial-image">';
+
+                        echo '<img src="'. $initial_image .'" class="initial-image" />';
+
+                    } else {
+
+                        echo '<div id="gravityforms-popup" class="gravityforms-popup-block undisplayed">';
+
+                    }
 
 					echo do_shortcode( "[gravityform id='{$form_id}' title='true' description='true' ajax='true']" );
 

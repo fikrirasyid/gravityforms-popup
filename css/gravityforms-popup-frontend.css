@@ -11,6 +11,23 @@
   overflow-y: auto;
   display: none;
 }
+#gravityforms-popup .gform_wrapper {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+#gravityforms-popup.has-initial-image {
+  padding: 0;
+  bottom: auto;
+}
+#gravityforms-popup.has-initial-image .initial-image {
+  display: block;
+  line-height: 1;
+  cursor: pointer;
+}
+#gravityforms-popup.has-initial-image .gform_wrapper {
+  display: none;
+}
 
 #gravityforms-popup-modal {
   background: rgba(0, 0, 0, 0.6);
