@@ -39,6 +39,23 @@ if( class_exists( 'GFForms' ) ){
         }
 
         /**
+         * Adding custom action on admin dashboard
+         * 
+         * @access protected
+         */
+        protected function init_admin(){
+            parent::init_admin();
+
+            // Only do this on Gravityforms Popup page
+            if( isset( $_GET['page'] ) && isset( $_GET['subview'] ) && 'gf_settings' == $_GET['page'] && 'Popup' == $_GET['subview'] ){
+
+                wp_enqueue_media();
+                wp_enqueue_script( 'gravityforms-popup-dashboard', $this->get_base_url() . "/js/gravityforms-popup-dashboard.js", array( 'jquery' ), $this->_version, true );
+
+            }
+        }
+
+        /**
          * Adding AJAX process
          * 
          * @access protected
@@ -137,15 +154,69 @@ if( class_exists( 'GFForms' ) ){
 		        				),
 		        			)
 		        		),
+                        array(
+                            'label'         => __( 'Initial Image', 'gravityforms-popup' ),
+                            'type'          => 'select_image',
+                            'name'          => 'initial_image'
+                        ),
 		        		array(
 		        			'label'			=> __( 'Update Cookie', 'gravityforms-popup' ),
-		        			'type'			=> 'update_gravityforms_popup_cookie_type'
+		        			'type'			=> 'update_gravityforms_popup_cookie_type',
+                            'name'          => 'update_cookie'
 	        			)
 		        	)
 			    ),
 			);
 
 			return $setting_fields;        	
+        }
+
+        /**
+         * Custom field for selecting image
+         * 
+         * @access public
+         * @return void
+         */
+        public function settings_select_image( $field ){
+
+            $image_id_name  = 'image_id_' . $field['name'];
+            $image_src_name = 'image_src_' . $field['name'];
+
+            // Field select
+            $this->settings_hidden( array(
+                'name' => $image_id_name
+            ) );
+
+            $this->settings_hidden( array(
+                'name' => $image_src_name
+            ) );
+
+            // Default value
+            $image_id   = $this->get_setting( $image_id_name, false );
+            $image_src  = $this->get_setting( $image_src_name, false );
+
+            // Default style
+            if( $image_src ){
+                $style_button_select = 'style="display: none;"';
+                $style_button_rest = '';                
+            } else {
+                $style_button_select = '';
+                $style_button_rest = 'style="display: none;"';
+            }
+
+            ?>
+            <div class="span preview-image" id="preview-image-<?php echo $field['name']; ?>" data-name="<?php echo $field['name']; ?>" style="display: block; margin-bottom: 5px;">
+                <?php 
+                    if( $image_src ){
+                        echo "<img src='{$image_src}' style='width: 100%;'>";
+                    }
+                ?>
+            </div>
+            <button <?php echo $style_button_select; ?> class="button button-select-image" data-name="<?php echo $field['name']; ?>"><?php _e( 'Select Image', 'gravityforms-popup' ); ?></button>
+            <button <?php echo $style_button_rest; ?> class="button button-change-image" data-name="<?php echo $field['name']; ?>"><?php _e( 'Change Image', 'gravityforms-popup' ); ?></button>
+            <button <?php echo $style_button_rest; ?> class="button button-primary button-delete-image" data-name="<?php echo $field['name']; ?>"><?php _e( 'Delete Image', 'gravityforms-popup' ); ?></button>
+
+            <?php
         }
 
         /**
