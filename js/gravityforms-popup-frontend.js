@@ -60,4 +60,28 @@ jQuery(document).ready(function($){
 
 		hide_gravityforms_popup();
 	});
+
+	// Display popup at the bottom of page
+	if( gravityforms_popup_params.display_on_bottom_page == 1 ){
+
+		// Execute on scroll
+		$(window).scroll(function(){
+			// Calculate the height of the page
+			var page_height 		= $(document).height();
+			var window_height 		= $(window).height();
+			var display_on_height 	= page_height - window_height;
+			var popup_displayed		= false;
+			var window_to_top 		= $(window).scrollTop();
+
+			// Adding more height, assuming the footer ID is #footer
+			if( $('#footer').length > 0 ){
+				var display_on_height = display_on_height - $('#footer').height();
+			}
+
+			if( window_to_top > display_on_height && popup_displayed == false ){
+				popup_displayed = true;
+				display_gravityforms_popup();
+			}
+		});
+	}
 });

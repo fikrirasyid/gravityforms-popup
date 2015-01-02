@@ -162,6 +162,10 @@ if( class_exists( 'GFForms' ) ){
 			        				'label'	 => __( '404 Not Found Page', 'gravityforms-popup' ),
 			        				'name'	 => 'appearance_is_404'
 		        				),
+                                array(
+                                    'label'  => __( 'When user reaches the bottom of the page', 'gravityforms-popup' ),
+                                    'name'   => 'display_on_bottom_page'
+                                ),
 		        			)
 		        		),
                         array(
@@ -398,10 +402,17 @@ if( class_exists( 'GFForms' ) ){
         		wp_enqueue_script( 'gravityforms-popup-frontend', $this->get_base_url() . "/js/gravityforms-popup-frontend.js", array( 'jquery' ), $this->_version, true );
         		wp_enqueue_style( 'gravityforms-popup-frontend', $this->get_base_url() . "/css/gravityforms-popup-frontend.css", array(), $this->_version );
 
-                // Define value for appearance
+                // Define values
                 $seconds_to_appearance = $this->get_plugin_setting( 'seconds_to_appearance' );
                 if( ! $seconds_to_appearance ){
                     $seconds_to_appearance = 10;
+                }
+
+                $display_on_bottom_page = $this->get_plugin_setting( 'display_on_bottom_page' );
+                if( ! isset( $display_on_bottom_page  ) ){
+                    $display_on_bottom_page = 0;
+                } else {
+                    $display_on_bottom_page = intval( $display_on_bottom_page );
                 }
 
         		// Adding parameters
@@ -411,7 +422,8 @@ if( class_exists( 'GFForms' ) ){
         			'displayed_nonce'			=> wp_create_nonce( 'gravityforms_popup_displayed' ),
         			'cookie_name'				=> 'gravityforms_popup_cookie',
         			'cookie_value'				=> $this->get_cookie_value(),
-        			'cookie_days'				=> 7
+        			'cookie_days'				=> 7,
+                    'display_on_bottom_page'    => $display_on_bottom_page 
     			);
 
     			wp_localize_script( 'gravityforms-popup-frontend', 'gravityforms_popup_params', $params );
