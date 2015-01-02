@@ -186,6 +186,23 @@ if( class_exists( 'GFForms' ) ){
         }
 
         /**
+         * Better way to get plugin setting: return default value if intended value doesn't exist
+         * 
+         * @param string $setting_name - Plugin setting to be returned
+         * @param mixed - specified default value
+         * @return mixed  - Returns the specified plugin setting or null if the setting doesn't exist
+         */
+        protected function get_plugin_setting( $setting_name, $default_value = false ){
+            $settings = $this->get_plugin_settings();
+
+            if( isset($settings[$setting_name]) ){
+                return $settings[$setting_name];
+            } else {
+                return $default_value;
+            }
+        }        
+
+        /**
          * Input numbers
          */
         protected function settings_number($field, $echo = true) {
