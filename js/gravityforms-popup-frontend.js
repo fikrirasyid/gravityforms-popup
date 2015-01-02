@@ -84,4 +84,15 @@ jQuery(document).ready(function($){
 			}
 		});
 	}
+
+	// Store long-term cookie after form submission
+	if( gravityforms_popup_params.form_id > 0 ){
+		$(document).on('gform_confirmation_loaded', function(e, form_id){
+		   if( form_id == gravityforms_popup_params.form_id ) {
+
+		   		// Set long-term cookie (2 years)
+		   		set_cookie( gravityforms_popup_params.cookie_name + '_submitted_' + gravityforms_popup_params.form_id, gravityforms_popup_params.form_id, 730 );
+		   }
+		});		
+	}
 });

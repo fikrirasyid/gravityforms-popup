@@ -335,6 +335,12 @@ if( class_exists( 'GFForms' ) ){
          */
         private function is_visible(){
 
+            // Check for long term cookie
+            $long_term_cookie_name = 'gravityforms_popup_cookie_submitted_' . $this->get_plugin_setting( 'gform', 0 );
+            if( isset( $_COOKIE[$long_term_cookie_name] ) && $_COOKIE[$long_term_cookie_name] == $this->get_plugin_setting( 'gform', 0 ) ){
+                return false;
+            }
+
         	// Cookie based checking first
         	if( isset( $_COOKIE['gravityforms_popup_cookie']) && $_COOKIE['gravityforms_popup_cookie'] == $this->get_cookie_value() ){
         		// User has viewed this popup before
@@ -419,28 +425,16 @@ if( class_exists( 'GFForms' ) ){
         		wp_enqueue_script( 'gravityforms-popup-frontend', $this->get_base_url() . "/js/gravityforms-popup-frontend.js", array( 'jquery' ), $this->_version, true );
         		wp_enqueue_style( 'gravityforms-popup-frontend', $this->get_base_url() . "/css/gravityforms-popup-frontend.css", array(), $this->_version );
 
-                // Define values
-                $seconds_to_appearance = $this->get_plugin_setting( 'seconds_to_appearance' );
-                if( ! $seconds_to_appearance ){
-                    $seconds_to_appearance = 10;
-                }
-
-                $display_on_bottom_page = $this->get_plugin_setting( 'display_on_bottom_page' );
-                if( ! isset( $display_on_bottom_page  ) ){
-                    $display_on_bottom_page = 0;
-                } else {
-                    $display_on_bottom_page = intval( $display_on_bottom_page );
-                }
-
         		// Adding parameters
         		$params = array(
-        			'seconds_to_appearance' 	=> $seconds_to_appearance,
+        			'seconds_to_appearance' 	=> $this->get_plugin_setting( 'seconds_to_appearance', 10 ),
         			'endpoint'					=> admin_url( '/admin-ajax.php?action=gravityforms_popup_endpoint' ),
         			'displayed_nonce'			=> wp_create_nonce( 'gravityforms_popup_displayed' ),
         			'cookie_name'				=> 'gravityforms_popup_cookie',
         			'cookie_value'				=> $this->get_cookie_value(),
         			'cookie_days'				=> 7,
-                    'display_on_bottom_page'    => $display_on_bottom_page 
+                    'display_on_bottom_page'    => $this->get_plugin_setting( 'display_on_bottom_page', 0 ),
+                    'form_id'                   => $this->get_plugin_setting( 'gform', 0 )
     			);
 
     			wp_localize_script( 'gravityforms-popup-frontend', 'gravityforms_popup_params', $params );
