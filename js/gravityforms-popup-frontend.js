@@ -74,8 +74,9 @@ jQuery(document).ready(function($){
 			var window_to_top 		= $(window).scrollTop();
 
 			// Adding more height, assuming the footer ID is #footer
-			if( $('#footer').length > 0 ){
-				var display_on_height = display_on_height - $('#footer').height();
+			if( $( gravityforms_popup_params.appearance_point_id ).length > 0 ){
+				var appearance_point_offset = $(gravityforms_popup_params.appearance_point_id ).offset();
+				var display_on_height 		= appearance_point_offset.top  - window_height;
 			}
 
 			if( window_to_top > display_on_height && popup_displayed == false ){

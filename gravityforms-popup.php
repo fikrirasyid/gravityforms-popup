@@ -428,6 +428,7 @@ if( class_exists( 'GFForms' ) ){
         		// Adding parameters
         		$params = array(
         			'seconds_to_appearance' 	=> $this->get_plugin_setting( 'seconds_to_appearance', 10 ),
+                    'appearance_point_id'       => apply_filters( 'gravityforms_popup_appearance_point_id', '#footer' ), // Display popup when the bottom of the window reaches this ID
         			'endpoint'					=> admin_url( '/admin-ajax.php?action=gravityforms_popup_endpoint' ),
         			'displayed_nonce'			=> wp_create_nonce( 'gravityforms_popup_displayed' ),
         			'cookie_name'				=> 'gravityforms_popup_cookie',
