@@ -182,7 +182,7 @@ if( class_exists( 'GFForms' ) ){
 			    ),
 			);
 
-			return $setting_fields;        	
+			return apply_filters( 'gravityforms_popup_plugin_settings_fields', $setting_fields );
         }
 
         /**
