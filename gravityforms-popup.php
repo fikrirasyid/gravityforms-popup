@@ -181,6 +181,26 @@ if( class_exists( 'GFForms' ) ){
 		        	)
 			    ),
 			);
+    
+            /**
+             * Multiste only setting. There's a chance that user want to apply cross sub-domain cookie
+             */
+            if( is_multisite() ){
+
+                $setting_fields[0]['fields'][] = array(
+                    'label'     => __( 'Multisite Cookie', 'gravityforms-popup' ),
+                    'name'      => 'multisite_cookie',
+                    'type'      => 'checkbox',
+                    'choices'   => array(
+                        array(
+                            'label' => __( 'Use Multisite Cookie', 'gravityforms-popup' ),
+                            'name'  => 'use_multisite_cookie',
+                            'tooltip' => __( 'Gravity Forms popup that has been displayed on the main domain will not be displayed on sub-domain', 'gravityforms-popup' )
+                        )
+                    )
+                );
+
+            }
 
 			return apply_filters( 'gravityforms_popup_plugin_settings_fields', $setting_fields );
         }
@@ -392,7 +412,11 @@ if( class_exists( 'GFForms' ) ){
 
         	$timestamp = current_time( 'timestamp' );
 
-        	$update = update_option( 'gravityforms_popup_cookie', 'gravityforms_popup_cookie-' . $timestamp );
+            if( $this->get_plugin_setting( 'use_multisite_cookie', 0 ) > 0 ){
+                $update = update_site_option( 'gravityforms_popup_cookie', 'gravityforms_popup_cookie-' . $timestamp );
+            } else {
+                $update = update_option( 'gravityforms_popup_cookie', 'gravityforms_popup_cookie-' . $timestamp );
+            }
 
         	if( $update ){
         		wp_redirect( $settings_link . "&update_cookie=success" );
@@ -410,7 +434,12 @@ if( class_exists( 'GFForms' ) ){
          * @return string
          */
         private function get_cookie_value(){
-        	return get_option( 'gravityforms_popup_cookie', 'gravityforms_popup_cookie' );
+
+            if( $this->get_plugin_setting( 'use_multisite_cookie', 0 ) > 0 ){
+                return get_site_option( 'gravityforms_popup_cookie', 'gravityforms_popup_cookie' );
+            } else {
+                return get_option( 'gravityforms_popup_cookie', 'gravityforms_popup_cookie' );
+            }
         }
 
         /**
@@ -435,7 +464,9 @@ if( class_exists( 'GFForms' ) ){
         			'cookie_value'				=> $this->get_cookie_value(),
         			'cookie_days'				=> 7,
                     'display_on_bottom_page'    => $this->get_plugin_setting( 'display_on_bottom_page', 0 ),
-                    'form_id'                   => $this->get_plugin_setting( 'gform', 0 )
+                    'form_id'                   => $this->get_plugin_setting( 'gform', 0 ),
+                    'use_multisite_cookie'      => $this->get_plugin_setting( 'use_multisite_cookie', 0 ),
+                    'domain'                    => $this->domain()
     			);
 
     			wp_localize_script( 'gravityforms-popup-frontend', 'gravityforms_popup_params', $params );
@@ -481,6 +512,22 @@ if( class_exists( 'GFForms' ) ){
 
         	}
 
+        }
+
+        /**
+         * Define main site domain name - used for multisite cookie
+         * 
+         * @access private
+         * @todo if it is localhost or IP address, return 0
+         * @return string
+         */
+        public function domain(){
+
+            if( is_multisite() && defined( 'DOMAIN_CURRENT_SITE' ) && 'localhost' != DOMAIN_CURRENT_SITE ){
+                return DOMAIN_CURRENT_SITE;
+            } else {
+                return 0;
+            }
         }
 
 	}

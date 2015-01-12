@@ -10,8 +10,14 @@ jQuery(document).ready(function($){
 	    } else {
 	        expires = "";
 	    }
+
+	    if( gravityforms_popup_params.use_multisite_cookie == 1 && gravityforms_popup_params.domain != 0 ){
+	    	domain = "; domain=." + gravityforms_popup_params.domain;
+	    } else {
+	    	domain = "";
+	    }
 	    
-	    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+	    document.cookie = escape(name) + "=" + escape(value) + expires + domain + "; path=/";
 	}
 
 	// Display
